@@ -10,8 +10,9 @@ import (
 )
 
 type DB struct {
-	client *mongo.Client
-	users  *mongo.Collection
+	client   *mongo.Client
+	users    *mongo.Collection
+	auctions *mongo.Collection
 }
 
 func Connect(mongoUri string, mongoDb string) *DB {
@@ -27,8 +28,9 @@ func Connect(mongoUri string, mongoDb string) *DB {
 	defer cancel()
 	client.Connect(ctx)
 	return &DB{
-		users:  client.Database(mongoDb).Collection("users"),
-		client: client,
+		users:    client.Database(mongoDb).Collection("users"),
+		auctions: client.Database(mongoDb).Collection("auctions"),
+		client:   client,
 	}
 }
 
