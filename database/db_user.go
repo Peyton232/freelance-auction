@@ -22,6 +22,7 @@ func (db *DB) CreateUser(input *model.NewUser) *model.User {
 		UserID: newID,
 		Email:  *input.Email,
 		Name:   *input.Name,
+		Phone:  *input.Phone,
 	}
 
 	res, err := collection.InsertOne(ctx, user)
