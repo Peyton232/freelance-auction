@@ -8,6 +8,21 @@ import (
 	"strconv"
 )
 
+type Auction struct {
+	AuctionID     string    `json:"auctionID"`
+	Bids          []*string `json:"bids"`
+	StartDate     *string   `json:"startDate"`
+	AuctionLength *string   `json:"auctionLength"`
+	ServiceDesc   *string   `json:"serviceDesc"`
+	Freelancer    *User     `json:"freelancer"`
+}
+
+type Bidder struct {
+	Ammount  *string `json:"ammount"`
+	Account  *User   `json:"account"`
+	BidderID string  `json:"bidderID"`
+}
+
 type BillDetails struct {
 	Email    *string          `json:"email"`
 	FullName *string          `json:"fullName"`
@@ -24,16 +39,9 @@ type BillingAdddress struct {
 	State        *string `json:"state"`
 }
 
-type FoodItem struct {
-	Name          *string `json:"name"`
-	Price         *string `json:"price"`
-	Modifications *string `json:"modifications"`
-}
-
 type NewUser struct {
 	Name  *string `json:"name"`
 	Email *string `json:"email"`
-	Pin   *string `json:"pin"`
 }
 
 type Payment struct {
@@ -44,26 +52,13 @@ type Payment struct {
 	BillingDetails *BillDetails `json:"billingDetails"`
 }
 
-type Prefence struct {
-	RidePrefence *RidePref   `json:"ridePrefence"`
-	Alergies     *string     `json:"alergies"`
-	Restaurant   *Restaurant `json:"restaurant"`
-	FavOrders    []*string   `json:"favOrders"`
-	FavCuisines  []*string   `json:"favCuisines"`
-}
-
-type Restaurant struct {
-	Name          *string     `json:"name"`
-	FavoriteOrder []*FoodItem `json:"favoriteOrder"`
-	TotalPrice    *string     `json:"totalPrice"`
-}
-
 type User struct {
 	Name           string     `json:"name"`
 	UserID         string     `json:"userID"`
-	Prefence       *Prefence  `json:"prefence"`
 	Email          string     `json:"email"`
-	Pin            string     `json:"pin"`
+	Phone          string     `json:"phone"`
+	PriorityList   []*Bidder  `json:"priorityList"`
+	Auctions       []*Auction `json:"auctions"`
 	PaymentMethods []*Payment `json:"paymentMethods"`
 }
 
@@ -107,48 +102,5 @@ func (e *PayType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e PayType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type RidePref string
-
-const (
-	RidePrefTollsallowed RidePref = "TOLLSALLOWED"
-	RidePrefAvoidhwy     RidePref = "AVOIDHWY"
-	RidePrefNotoll       RidePref = "NOTOLL"
-)
-
-var AllRidePref = []RidePref{
-	RidePrefTollsallowed,
-	RidePrefAvoidhwy,
-	RidePrefNotoll,
-}
-
-func (e RidePref) IsValid() bool {
-	switch e {
-	case RidePrefTollsallowed, RidePrefAvoidhwy, RidePrefNotoll:
-		return true
-	}
-	return false
-}
-
-func (e RidePref) String() string {
-	return string(e)
-}
-
-func (e *RidePref) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = RidePref(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ridePref", str)
-	}
-	return nil
-}
-
-func (e RidePref) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

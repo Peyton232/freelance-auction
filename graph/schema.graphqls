@@ -2,32 +2,40 @@
 #
 # https://gqlgen.com/getting-started/
 
-enum ridePref {
-  TOLLSALLOWED
-  AVOIDHWY
-  NOTOLL
-}
-
 enum payType{
   DIGITALWALLET
   CREDITCARD
   CRYPTO
 }
 
-# User def
 type User {
 	name: String!
 	userID: String!
-	prefence: Prefence
   email: String!
-  pin: String!
+  phone: String!
+  priorityList: [Bidder]
+  auctions: [Auction]
   paymentMethods: [Payment]
 }
 
 input NewUser {
   name: String
   email: String
-  pin: String
+}
+
+type Bidder {
+  ammount: String
+  account: User
+  bidderID: String!
+}
+
+type Auction {
+  auctionID: String!
+  bids: [String] # in order 
+  startDate: String
+  auctionLength: String
+  serviceDesc: String
+  freelancer: User
 }
 
 type Payment {
@@ -52,26 +60,6 @@ type BillingAdddress {
   addressLine2: String
   zip: String
   state: String
-}
-
-type Prefence {
-  ridePrefence: ridePref
-  alergies: String
-  restaurant: Restaurant
-  favOrders: [String]
-  favCuisines: [String]
-}
-
-type Restaurant {
-  name: String
-  favoriteOrder: [FoodItem]
-  totalPrice: String
-}
-
-type FoodItem {
-  name: String
-  price: String
-  modifications: String
 }
 
 type Query {

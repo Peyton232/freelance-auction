@@ -43,6 +43,21 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Auction struct {
+		AuctionID     func(childComplexity int) int
+		AuctionLength func(childComplexity int) int
+		Bids          func(childComplexity int) int
+		Freelancer    func(childComplexity int) int
+		ServiceDesc   func(childComplexity int) int
+		StartDate     func(childComplexity int) int
+	}
+
+	Bidder struct {
+		Account  func(childComplexity int) int
+		Ammount  func(childComplexity int) int
+		BidderID func(childComplexity int) int
+	}
+
 	BillDetails struct {
 		BillAdd  func(childComplexity int) int
 		Email    func(childComplexity int) int
@@ -59,12 +74,6 @@ type ComplexityRoot struct {
 		Zip          func(childComplexity int) int
 	}
 
-	FoodItem struct {
-		Modifications func(childComplexity int) int
-		Name          func(childComplexity int) int
-		Price         func(childComplexity int) int
-	}
-
 	Mutation struct {
 		CreateUser func(childComplexity int, input model.NewUser) int
 		RemoveUser func(childComplexity int, userid string) int
@@ -78,31 +87,18 @@ type ComplexityRoot struct {
 		Paypal         func(childComplexity int) int
 	}
 
-	Prefence struct {
-		Alergies     func(childComplexity int) int
-		FavCuisines  func(childComplexity int) int
-		FavOrders    func(childComplexity int) int
-		Restaurant   func(childComplexity int) int
-		RidePrefence func(childComplexity int) int
-	}
-
 	Query struct {
 		AllUsers func(childComplexity int) int
 		UserByID func(childComplexity int, userID string) int
 	}
 
-	Restaurant struct {
-		FavoriteOrder func(childComplexity int) int
-		Name          func(childComplexity int) int
-		TotalPrice    func(childComplexity int) int
-	}
-
 	User struct {
+		Auctions       func(childComplexity int) int
 		Email          func(childComplexity int) int
 		Name           func(childComplexity int) int
 		PaymentMethods func(childComplexity int) int
-		Pin            func(childComplexity int) int
-		Prefence       func(childComplexity int) int
+		Phone          func(childComplexity int) int
+		PriorityList   func(childComplexity int) int
 		UserID         func(childComplexity int) int
 	}
 }
@@ -130,6 +126,69 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Auction.auctionID":
+		if e.complexity.Auction.AuctionID == nil {
+			break
+		}
+
+		return e.complexity.Auction.AuctionID(childComplexity), true
+
+	case "Auction.auctionLength":
+		if e.complexity.Auction.AuctionLength == nil {
+			break
+		}
+
+		return e.complexity.Auction.AuctionLength(childComplexity), true
+
+	case "Auction.bids":
+		if e.complexity.Auction.Bids == nil {
+			break
+		}
+
+		return e.complexity.Auction.Bids(childComplexity), true
+
+	case "Auction.freelancer":
+		if e.complexity.Auction.Freelancer == nil {
+			break
+		}
+
+		return e.complexity.Auction.Freelancer(childComplexity), true
+
+	case "Auction.serviceDesc":
+		if e.complexity.Auction.ServiceDesc == nil {
+			break
+		}
+
+		return e.complexity.Auction.ServiceDesc(childComplexity), true
+
+	case "Auction.startDate":
+		if e.complexity.Auction.StartDate == nil {
+			break
+		}
+
+		return e.complexity.Auction.StartDate(childComplexity), true
+
+	case "Bidder.account":
+		if e.complexity.Bidder.Account == nil {
+			break
+		}
+
+		return e.complexity.Bidder.Account(childComplexity), true
+
+	case "Bidder.ammount":
+		if e.complexity.Bidder.Ammount == nil {
+			break
+		}
+
+		return e.complexity.Bidder.Ammount(childComplexity), true
+
+	case "Bidder.bidderID":
+		if e.complexity.Bidder.BidderID == nil {
+			break
+		}
+
+		return e.complexity.Bidder.BidderID(childComplexity), true
 
 	case "BillDetails.billAdd":
 		if e.complexity.BillDetails.BillAdd == nil {
@@ -201,27 +260,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BillingAdddress.Zip(childComplexity), true
 
-	case "FoodItem.modifications":
-		if e.complexity.FoodItem.Modifications == nil {
-			break
-		}
-
-		return e.complexity.FoodItem.Modifications(childComplexity), true
-
-	case "FoodItem.name":
-		if e.complexity.FoodItem.Name == nil {
-			break
-		}
-
-		return e.complexity.FoodItem.Name(childComplexity), true
-
-	case "FoodItem.price":
-		if e.complexity.FoodItem.Price == nil {
-			break
-		}
-
-		return e.complexity.FoodItem.Price(childComplexity), true
-
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
 			break
@@ -281,41 +319,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Payment.Paypal(childComplexity), true
 
-	case "Prefence.alergies":
-		if e.complexity.Prefence.Alergies == nil {
-			break
-		}
-
-		return e.complexity.Prefence.Alergies(childComplexity), true
-
-	case "Prefence.favCuisines":
-		if e.complexity.Prefence.FavCuisines == nil {
-			break
-		}
-
-		return e.complexity.Prefence.FavCuisines(childComplexity), true
-
-	case "Prefence.favOrders":
-		if e.complexity.Prefence.FavOrders == nil {
-			break
-		}
-
-		return e.complexity.Prefence.FavOrders(childComplexity), true
-
-	case "Prefence.restaurant":
-		if e.complexity.Prefence.Restaurant == nil {
-			break
-		}
-
-		return e.complexity.Prefence.Restaurant(childComplexity), true
-
-	case "Prefence.ridePrefence":
-		if e.complexity.Prefence.RidePrefence == nil {
-			break
-		}
-
-		return e.complexity.Prefence.RidePrefence(childComplexity), true
-
 	case "Query.allUsers":
 		if e.complexity.Query.AllUsers == nil {
 			break
@@ -335,26 +338,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.UserByID(childComplexity, args["userID"].(string)), true
 
-	case "Restaurant.favoriteOrder":
-		if e.complexity.Restaurant.FavoriteOrder == nil {
+	case "User.auctions":
+		if e.complexity.User.Auctions == nil {
 			break
 		}
 
-		return e.complexity.Restaurant.FavoriteOrder(childComplexity), true
-
-	case "Restaurant.name":
-		if e.complexity.Restaurant.Name == nil {
-			break
-		}
-
-		return e.complexity.Restaurant.Name(childComplexity), true
-
-	case "Restaurant.totalPrice":
-		if e.complexity.Restaurant.TotalPrice == nil {
-			break
-		}
-
-		return e.complexity.Restaurant.TotalPrice(childComplexity), true
+		return e.complexity.User.Auctions(childComplexity), true
 
 	case "User.email":
 		if e.complexity.User.Email == nil {
@@ -377,19 +366,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.PaymentMethods(childComplexity), true
 
-	case "User.pin":
-		if e.complexity.User.Pin == nil {
+	case "User.phone":
+		if e.complexity.User.Phone == nil {
 			break
 		}
 
-		return e.complexity.User.Pin(childComplexity), true
+		return e.complexity.User.Phone(childComplexity), true
 
-	case "User.prefence":
-		if e.complexity.User.Prefence == nil {
+	case "User.priorityList":
+		if e.complexity.User.PriorityList == nil {
 			break
 		}
 
-		return e.complexity.User.Prefence(childComplexity), true
+		return e.complexity.User.PriorityList(childComplexity), true
 
 	case "User.userID":
 		if e.complexity.User.UserID == nil {
@@ -466,32 +455,40 @@ var sources = []*ast.Source{
 #
 # https://gqlgen.com/getting-started/
 
-enum ridePref {
-  TOLLSALLOWED
-  AVOIDHWY
-  NOTOLL
-}
-
 enum payType{
   DIGITALWALLET
   CREDITCARD
   CRYPTO
 }
 
-# User def
 type User {
 	name: String!
 	userID: String!
-	prefence: Prefence
   email: String!
-  pin: String!
+  phone: String!
+  priorityList: [Bidder]
+  auctions: [Auction]
   paymentMethods: [Payment]
 }
 
 input NewUser {
   name: String
   email: String
-  pin: String
+}
+
+type Bidder {
+  ammount: String
+  account: User
+  bidderID: String!
+}
+
+type Auction {
+  auctionID: String!
+  bids: [String] # in order 
+  startDate: String
+  auctionLength: String
+  serviceDesc: String
+  freelancer: User
 }
 
 type Payment {
@@ -516,26 +513,6 @@ type BillingAdddress {
   addressLine2: String
   zip: String
   state: String
-}
-
-type Prefence {
-  ridePrefence: ridePref
-  alergies: String
-  restaurant: Restaurant
-  favOrders: [String]
-  favCuisines: [String]
-}
-
-type Restaurant {
-  name: String
-  favoriteOrder: [FoodItem]
-  totalPrice: String
-}
-
-type FoodItem {
-  name: String
-  price: String
-  modifications: String
 }
 
 type Query {
@@ -563,7 +540,7 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	var arg0 model.NewUser
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewUser2githubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐNewUser(ctx, tmp)
+		arg0, err = ec.unmarshalNNewUser2githubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐNewUser(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -654,6 +631,300 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _Auction_auctionID(ctx context.Context, field graphql.CollectedField, obj *model.Auction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AuctionID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Auction_bids(ctx context.Context, field graphql.CollectedField, obj *model.Auction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Bids, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*string)
+	fc.Result = res
+	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Auction_startDate(ctx context.Context, field graphql.CollectedField, obj *model.Auction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Auction_auctionLength(ctx context.Context, field graphql.CollectedField, obj *model.Auction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AuctionLength, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Auction_serviceDesc(ctx context.Context, field graphql.CollectedField, obj *model.Auction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ServiceDesc, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Auction_freelancer(ctx context.Context, field graphql.CollectedField, obj *model.Auction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Auction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Freelancer, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Bidder_ammount(ctx context.Context, field graphql.CollectedField, obj *model.Bidder) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Bidder",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ammount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Bidder_account(ctx context.Context, field graphql.CollectedField, obj *model.Bidder) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Bidder",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Bidder_bidderID(ctx context.Context, field graphql.CollectedField, obj *model.Bidder) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Bidder",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BidderID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _BillDetails_email(ctx context.Context, field graphql.CollectedField, obj *model.BillDetails) (ret graphql.Marshaler) {
 	defer func() {
@@ -780,7 +1051,7 @@ func (ec *executionContext) _BillDetails_billAdd(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.BillingAdddress)
 	fc.Result = res
-	return ec.marshalOBillingAdddress2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐBillingAdddress(ctx, field.Selections, res)
+	return ec.marshalOBillingAdddress2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillingAdddress(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BillingAdddress_city(ctx context.Context, field graphql.CollectedField, obj *model.BillingAdddress) (ret graphql.Marshaler) {
@@ -975,102 +1246,6 @@ func (ec *executionContext) _BillingAdddress_state(ctx context.Context, field gr
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _FoodItem_name(ctx context.Context, field graphql.CollectedField, obj *model.FoodItem) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "FoodItem",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _FoodItem_price(ctx context.Context, field graphql.CollectedField, obj *model.FoodItem) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "FoodItem",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Price, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _FoodItem_modifications(ctx context.Context, field graphql.CollectedField, obj *model.FoodItem) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "FoodItem",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Modifications, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1110,7 +1285,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_removeUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1152,7 +1327,7 @@ func (ec *executionContext) _Mutation_removeUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Payment_paymentType(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
@@ -1184,7 +1359,7 @@ func (ec *executionContext) _Payment_paymentType(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.PayType)
 	fc.Result = res
-	return ec.marshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPayType(ctx, field.Selections, res)
+	return ec.marshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Payment_digitalWallet(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
@@ -1312,167 +1487,7 @@ func (ec *executionContext) _Payment_billingDetails(ctx context.Context, field g
 	}
 	res := resTmp.(*model.BillDetails)
 	fc.Result = res
-	return ec.marshalOBillDetails2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐBillDetails(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Prefence_ridePrefence(ctx context.Context, field graphql.CollectedField, obj *model.Prefence) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Prefence",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RidePrefence, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.RidePref)
-	fc.Result = res
-	return ec.marshalOridePref2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐRidePref(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Prefence_alergies(ctx context.Context, field graphql.CollectedField, obj *model.Prefence) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Prefence",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Alergies, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Prefence_restaurant(ctx context.Context, field graphql.CollectedField, obj *model.Prefence) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Prefence",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Restaurant, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.Restaurant)
-	fc.Result = res
-	return ec.marshalORestaurant2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐRestaurant(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Prefence_favOrders(ctx context.Context, field graphql.CollectedField, obj *model.Prefence) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Prefence",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.FavOrders, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*string)
-	fc.Result = res
-	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Prefence_favCuisines(ctx context.Context, field graphql.CollectedField, obj *model.Prefence) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Prefence",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.FavCuisines, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*string)
-	fc.Result = res
-	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
+	return ec.marshalOBillDetails2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillDetails(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_allUsers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1504,7 +1519,7 @@ func (ec *executionContext) _Query_allUsers(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*model.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚕᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_userByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1546,7 +1561,7 @@ func (ec *executionContext) _Query_userByID(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1620,102 +1635,6 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Restaurant_name(ctx context.Context, field graphql.CollectedField, obj *model.Restaurant) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Restaurant",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Restaurant_favoriteOrder(ctx context.Context, field graphql.CollectedField, obj *model.Restaurant) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Restaurant",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.FavoriteOrder, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.FoodItem)
-	fc.Result = res
-	return ec.marshalOFoodItem2ᚕᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐFoodItem(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Restaurant_totalPrice(ctx context.Context, field graphql.CollectedField, obj *model.Restaurant) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Restaurant",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TotalPrice, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _User_name(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1786,38 +1705,6 @@ func (ec *executionContext) _User_userID(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_prefence(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "User",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Prefence, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.Prefence)
-	fc.Result = res
-	return ec.marshalOPrefence2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPrefence(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1853,7 +1740,7 @@ func (ec *executionContext) _User_email(ctx context.Context, field graphql.Colle
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_pin(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_phone(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1871,7 +1758,7 @@ func (ec *executionContext) _User_pin(ctx context.Context, field graphql.Collect
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Pin, nil
+		return obj.Phone, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1886,6 +1773,70 @@ func (ec *executionContext) _User_pin(ctx context.Context, field graphql.Collect
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_priorityList(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PriorityList, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Bidder)
+	fc.Result = res
+	return ec.marshalOBidder2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBidder(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_auctions(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Auctions, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Auction)
+	fc.Result = res
+	return ec.marshalOAuction2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_paymentMethods(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
@@ -1917,7 +1868,7 @@ func (ec *executionContext) _User_paymentMethods(ctx context.Context, field grap
 	}
 	res := resTmp.([]*model.Payment)
 	fc.Result = res
-	return ec.marshalOPayment2ᚕᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPayment(ctx, field.Selections, res)
+	return ec.marshalOPayment2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -3067,14 +3018,6 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 			if err != nil {
 				return it, err
 			}
-		case "pin":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pin"))
-			it.Pin, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		}
 	}
 
@@ -3088,6 +3031,117 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var auctionImplementors = []string{"Auction"}
+
+func (ec *executionContext) _Auction(ctx context.Context, sel ast.SelectionSet, obj *model.Auction) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, auctionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Auction")
+		case "auctionID":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Auction_auctionID(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "bids":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Auction_bids(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "startDate":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Auction_startDate(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "auctionLength":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Auction_auctionLength(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "serviceDesc":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Auction_serviceDesc(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "freelancer":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Auction_freelancer(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var bidderImplementors = []string{"Bidder"}
+
+func (ec *executionContext) _Bidder(ctx context.Context, sel ast.SelectionSet, obj *model.Bidder) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, bidderImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Bidder")
+		case "ammount":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Bidder_ammount(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "account":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Bidder_account(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "bidderID":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Bidder_bidderID(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
 
 var billDetailsImplementors = []string{"BillDetails"}
 
@@ -3186,48 +3240,6 @@ func (ec *executionContext) _BillingAdddress(ctx context.Context, sel ast.Select
 		case "state":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._BillingAdddress_state(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var foodItemImplementors = []string{"FoodItem"}
-
-func (ec *executionContext) _FoodItem(ctx context.Context, sel ast.SelectionSet, obj *model.FoodItem) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, foodItemImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("FoodItem")
-		case "name":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._FoodItem_name(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "price":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._FoodItem_price(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "modifications":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._FoodItem_modifications(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -3349,62 +3361,6 @@ func (ec *executionContext) _Payment(ctx context.Context, sel ast.SelectionSet, 
 	return out
 }
 
-var prefenceImplementors = []string{"Prefence"}
-
-func (ec *executionContext) _Prefence(ctx context.Context, sel ast.SelectionSet, obj *model.Prefence) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, prefenceImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Prefence")
-		case "ridePrefence":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Prefence_ridePrefence(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "alergies":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Prefence_alergies(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "restaurant":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Prefence_restaurant(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "favOrders":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Prefence_favOrders(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "favCuisines":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Prefence_favCuisines(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var queryImplementors = []string{"Query"}
 
 func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3492,48 +3448,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var restaurantImplementors = []string{"Restaurant"}
-
-func (ec *executionContext) _Restaurant(ctx context.Context, sel ast.SelectionSet, obj *model.Restaurant) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, restaurantImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Restaurant")
-		case "name":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Restaurant_name(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "favoriteOrder":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Restaurant_favoriteOrder(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "totalPrice":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Restaurant_totalPrice(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var userImplementors = []string{"User"}
 
 func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model.User) graphql.Marshaler {
@@ -3564,13 +3478,6 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "prefence":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._User_prefence(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		case "email":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._User_email(ctx, field, obj)
@@ -3581,9 +3488,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pin":
+		case "phone":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._User_pin(ctx, field, obj)
+				return ec._User_phone(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -3591,6 +3498,20 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "priorityList":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._User_priorityList(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+		case "auctions":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._User_auctions(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
 		case "paymentMethods":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._User_paymentMethods(ctx, field, obj)
@@ -4048,7 +3969,7 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewUser2githubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
+func (ec *executionContext) unmarshalNNewUser2githubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
 	res, err := ec.unmarshalInputNewUser(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -4068,11 +3989,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNUser2githubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2githubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4335,14 +4256,110 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOBillDetails2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐBillDetails(ctx context.Context, sel ast.SelectionSet, v *model.BillDetails) graphql.Marshaler {
+func (ec *executionContext) marshalOAuction2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx context.Context, sel ast.SelectionSet, v []*model.Auction) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOAuction2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOAuction2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx context.Context, sel ast.SelectionSet, v *model.Auction) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Auction(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBidder2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBidder(ctx context.Context, sel ast.SelectionSet, v []*model.Bidder) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOBidder2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBidder(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOBidder2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBidder(ctx context.Context, sel ast.SelectionSet, v *model.Bidder) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Bidder(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBillDetails2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillDetails(ctx context.Context, sel ast.SelectionSet, v *model.BillDetails) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._BillDetails(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOBillingAdddress2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐBillingAdddress(ctx context.Context, sel ast.SelectionSet, v *model.BillingAdddress) graphql.Marshaler {
+func (ec *executionContext) marshalOBillingAdddress2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillingAdddress(ctx context.Context, sel ast.SelectionSet, v *model.BillingAdddress) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4375,7 +4392,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOFoodItem2ᚕᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐFoodItem(ctx context.Context, sel ast.SelectionSet, v []*model.FoodItem) graphql.Marshaler {
+func (ec *executionContext) marshalOPayment2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx context.Context, sel ast.SelectionSet, v []*model.Payment) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4402,7 +4419,7 @@ func (ec *executionContext) marshalOFoodItem2ᚕᚖgithubᚗcomᚋPeyton232ᚋMa
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOFoodItem2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐFoodItem(ctx, sel, v[i])
+			ret[i] = ec.marshalOPayment2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4416,73 +4433,11 @@ func (ec *executionContext) marshalOFoodItem2ᚕᚖgithubᚗcomᚋPeyton232ᚋMa
 	return ret
 }
 
-func (ec *executionContext) marshalOFoodItem2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐFoodItem(ctx context.Context, sel ast.SelectionSet, v *model.FoodItem) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._FoodItem(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOPayment2ᚕᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPayment(ctx context.Context, sel ast.SelectionSet, v []*model.Payment) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOPayment2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPayment(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
-}
-
-func (ec *executionContext) marshalOPayment2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPayment(ctx context.Context, sel ast.SelectionSet, v *model.Payment) graphql.Marshaler {
+func (ec *executionContext) marshalOPayment2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx context.Context, sel ast.SelectionSet, v *model.Payment) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Payment(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOPrefence2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPrefence(ctx context.Context, sel ast.SelectionSet, v *model.Prefence) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Prefence(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalORestaurant2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐRestaurant(ctx context.Context, sel ast.SelectionSet, v *model.Restaurant) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Restaurant(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
@@ -4543,7 +4498,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4570,7 +4525,7 @@ func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋPeyton232ᚋMavi�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOUser2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalOUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4584,7 +4539,7 @@ func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋPeyton232ᚋMavi�
 	return ret
 }
 
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4793,7 +4748,7 @@ func (ec *executionContext) marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgen�
 	return ec.___Type(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPayType(ctx context.Context, v interface{}) (*model.PayType, error) {
+func (ec *executionContext) unmarshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayType(ctx context.Context, v interface{}) (*model.PayType, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -4802,23 +4757,7 @@ func (ec *executionContext) unmarshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋMavi
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐPayType(ctx context.Context, sel ast.SelectionSet, v *model.PayType) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
-}
-
-func (ec *executionContext) unmarshalOridePref2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐRidePref(ctx context.Context, v interface{}) (*model.RidePref, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(model.RidePref)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOridePref2ᚖgithubᚗcomᚋPeyton232ᚋMaviᚑBackendᚋgraphᚋmodelᚐRidePref(ctx context.Context, sel ast.SelectionSet, v *model.RidePref) graphql.Marshaler {
+func (ec *executionContext) marshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayType(ctx context.Context, sel ast.SelectionSet, v *model.PayType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

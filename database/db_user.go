@@ -21,7 +21,6 @@ func (db *DB) CreateUser(input *model.NewUser) *model.User {
 	user := &model.User{
 		UserID: newID,
 		Email:  *input.Email,
-		Pin:    *input.Pin,
 		Name:   *input.Name,
 	}
 
