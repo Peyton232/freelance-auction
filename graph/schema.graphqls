@@ -1,0 +1,87 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+enum ridePref {
+  TOLLSALLOWED
+  AVOIDHWY
+  NOTOLL
+}
+
+enum payType{
+  DIGITALWALLET
+  CREDITCARD
+  CRYPTO
+}
+
+# User def
+type User {
+	name: String!
+	userID: String!
+	prefence: Prefence
+  email: String!
+  pin: String!
+  paymentMethods: [Payment]
+}
+
+input NewUser {
+  name: String
+  email: String
+  pin: String
+}
+
+type Payment {
+  paymentType: payType
+  digitalWallet: String
+  paypal: String
+  cryptoWallet: String
+  billingDetails: BillDetails
+}
+
+type BillDetails {
+  email: String
+  fullName: String
+  phone: String
+  billAdd: BillingAdddress
+}
+
+type BillingAdddress {
+  city: String
+  countryCode: String
+  addressLine1: String
+  addressLine2: String
+  zip: String
+  state: String
+}
+
+type Prefence {
+  ridePrefence: ridePref
+  alergies: String
+  restaurant: Restaurant
+  favOrders: [String]
+  favCuisines: [String]
+}
+
+type Restaurant {
+  name: String
+  favoriteOrder: [FoodItem]
+  totalPrice: String
+}
+
+type FoodItem {
+  name: String
+  price: String
+  modifications: String
+}
+
+type Query {
+  # User
+  allUsers: [User]
+  userByID(userID: ID!): User!
+}
+
+type Mutation {
+  # User mutations
+  createUser(input: NewUser!): User!
+  removeUser(userid: ID!): User!
+}
