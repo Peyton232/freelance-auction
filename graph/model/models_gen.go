@@ -2,12 +2,6 @@
 
 package model
 
-import (
-	"fmt"
-	"io"
-	"strconv"
-)
-
 type Auction struct {
 	AuctionID     string    `json:"auctionID"`
 	Bids          []*string `json:"bids"`
@@ -23,20 +17,11 @@ type Bidder struct {
 	BidderID string  `json:"bidderID"`
 }
 
-type BillDetails struct {
-	Email    *string          `json:"email"`
-	FullName *string          `json:"fullName"`
-	Phone    *string          `json:"phone"`
-	BillAdd  *BillingAdddress `json:"billAdd"`
-}
-
-type BillingAdddress struct {
-	City         *string `json:"city"`
-	CountryCode  *string `json:"countryCode"`
-	AddressLine1 *string `json:"addressLine1"`
-	AddressLine2 *string `json:"addressLine2"`
-	Zip          *string `json:"zip"`
-	State        *string `json:"state"`
+type NewAuction struct {
+	StartDate     *string `json:"startDate"`
+	AuctionLength *string `json:"auctionLength"`
+	ServiceDesc   *string `json:"serviceDesc"`
+	FreelancerID  *string `json:"freelancerID"`
 }
 
 type NewUser struct {
@@ -44,63 +29,11 @@ type NewUser struct {
 	Email *string `json:"email"`
 }
 
-type Payment struct {
-	PaymentType    *PayType     `json:"paymentType"`
-	DigitalWallet  *string      `json:"digitalWallet"`
-	Paypal         *string      `json:"paypal"`
-	CryptoWallet   *string      `json:"cryptoWallet"`
-	BillingDetails *BillDetails `json:"billingDetails"`
-}
-
 type User struct {
-	Name           string     `json:"name"`
-	UserID         string     `json:"userID"`
-	Email          string     `json:"email"`
-	Phone          string     `json:"phone"`
-	PriorityList   []*Bidder  `json:"priorityList"`
-	Auctions       []*Auction `json:"auctions"`
-	PaymentMethods []*Payment `json:"paymentMethods"`
-}
-
-type PayType string
-
-const (
-	PayTypeDigitalwallet PayType = "DIGITALWALLET"
-	PayTypeCreditcard    PayType = "CREDITCARD"
-	PayTypeCrypto        PayType = "CRYPTO"
-)
-
-var AllPayType = []PayType{
-	PayTypeDigitalwallet,
-	PayTypeCreditcard,
-	PayTypeCrypto,
-}
-
-func (e PayType) IsValid() bool {
-	switch e {
-	case PayTypeDigitalwallet, PayTypeCreditcard, PayTypeCrypto:
-		return true
-	}
-	return false
-}
-
-func (e PayType) String() string {
-	return string(e)
-}
-
-func (e *PayType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = PayType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid payType", str)
-	}
-	return nil
-}
-
-func (e PayType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
+	Name         string     `json:"name"`
+	UserID       string     `json:"userID"`
+	Email        string     `json:"email"`
+	Phone        string     `json:"phone"`
+	PriorityList []*Bidder  `json:"priorityList"`
+	Auctions     []*Auction `json:"auctions"`
 }

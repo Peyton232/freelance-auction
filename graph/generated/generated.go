@@ -58,58 +58,43 @@ type ComplexityRoot struct {
 		BidderID func(childComplexity int) int
 	}
 
-	BillDetails struct {
-		BillAdd  func(childComplexity int) int
-		Email    func(childComplexity int) int
-		FullName func(childComplexity int) int
-		Phone    func(childComplexity int) int
-	}
-
-	BillingAdddress struct {
-		AddressLine1 func(childComplexity int) int
-		AddressLine2 func(childComplexity int) int
-		City         func(childComplexity int) int
-		CountryCode  func(childComplexity int) int
-		State        func(childComplexity int) int
-		Zip          func(childComplexity int) int
-	}
-
 	Mutation struct {
-		CreateUser func(childComplexity int, input model.NewUser) int
-		RemoveUser func(childComplexity int, userid string) int
-	}
-
-	Payment struct {
-		BillingDetails func(childComplexity int) int
-		CryptoWallet   func(childComplexity int) int
-		DigitalWallet  func(childComplexity int) int
-		PaymentType    func(childComplexity int) int
-		Paypal         func(childComplexity int) int
+		BidOnAuction  func(childComplexity int, userID string, auctionID string) int
+		CreateAuction func(childComplexity int, input model.NewAuction) int
+		CreateUser    func(childComplexity int, input model.NewUser) int
+		RemoveAuction func(childComplexity int, auctionID string) int
+		RemoveUser    func(childComplexity int, userid string) int
 	}
 
 	Query struct {
-		AllUsers func(childComplexity int) int
-		UserByID func(childComplexity int, userID string) int
+		AllAuctions func(childComplexity int) int
+		AllUsers    func(childComplexity int) int
+		AuctionByID func(childComplexity int, auctionID string) int
+		UserByID    func(childComplexity int, userID string) int
 	}
 
 	User struct {
-		Auctions       func(childComplexity int) int
-		Email          func(childComplexity int) int
-		Name           func(childComplexity int) int
-		PaymentMethods func(childComplexity int) int
-		Phone          func(childComplexity int) int
-		PriorityList   func(childComplexity int) int
-		UserID         func(childComplexity int) int
+		Auctions     func(childComplexity int) int
+		Email        func(childComplexity int) int
+		Name         func(childComplexity int) int
+		Phone        func(childComplexity int) int
+		PriorityList func(childComplexity int) int
+		UserID       func(childComplexity int) int
 	}
 }
 
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input model.NewUser) (*model.User, error)
 	RemoveUser(ctx context.Context, userid string) (*model.User, error)
+	CreateAuction(ctx context.Context, input model.NewAuction) (*model.Auction, error)
+	RemoveAuction(ctx context.Context, auctionID string) (*model.Auction, error)
+	BidOnAuction(ctx context.Context, userID string, auctionID string) (*model.Auction, error)
 }
 type QueryResolver interface {
 	AllUsers(ctx context.Context) ([]*model.User, error)
 	UserByID(ctx context.Context, userID string) (*model.User, error)
+	AllAuctions(ctx context.Context) ([]*model.Auction, error)
+	AuctionByID(ctx context.Context, auctionID string) (*model.Auction, error)
 }
 
 type executableSchema struct {
@@ -190,75 +175,29 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Bidder.BidderID(childComplexity), true
 
-	case "BillDetails.billAdd":
-		if e.complexity.BillDetails.BillAdd == nil {
+	case "Mutation.bidOnAuction":
+		if e.complexity.Mutation.BidOnAuction == nil {
 			break
 		}
 
-		return e.complexity.BillDetails.BillAdd(childComplexity), true
+		args, err := ec.field_Mutation_bidOnAuction_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
 
-	case "BillDetails.email":
-		if e.complexity.BillDetails.Email == nil {
+		return e.complexity.Mutation.BidOnAuction(childComplexity, args["userID"].(string), args["auctionID"].(string)), true
+
+	case "Mutation.createAuction":
+		if e.complexity.Mutation.CreateAuction == nil {
 			break
 		}
 
-		return e.complexity.BillDetails.Email(childComplexity), true
-
-	case "BillDetails.fullName":
-		if e.complexity.BillDetails.FullName == nil {
-			break
+		args, err := ec.field_Mutation_createAuction_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
 		}
 
-		return e.complexity.BillDetails.FullName(childComplexity), true
-
-	case "BillDetails.phone":
-		if e.complexity.BillDetails.Phone == nil {
-			break
-		}
-
-		return e.complexity.BillDetails.Phone(childComplexity), true
-
-	case "BillingAdddress.addressLine1":
-		if e.complexity.BillingAdddress.AddressLine1 == nil {
-			break
-		}
-
-		return e.complexity.BillingAdddress.AddressLine1(childComplexity), true
-
-	case "BillingAdddress.addressLine2":
-		if e.complexity.BillingAdddress.AddressLine2 == nil {
-			break
-		}
-
-		return e.complexity.BillingAdddress.AddressLine2(childComplexity), true
-
-	case "BillingAdddress.city":
-		if e.complexity.BillingAdddress.City == nil {
-			break
-		}
-
-		return e.complexity.BillingAdddress.City(childComplexity), true
-
-	case "BillingAdddress.countryCode":
-		if e.complexity.BillingAdddress.CountryCode == nil {
-			break
-		}
-
-		return e.complexity.BillingAdddress.CountryCode(childComplexity), true
-
-	case "BillingAdddress.state":
-		if e.complexity.BillingAdddress.State == nil {
-			break
-		}
-
-		return e.complexity.BillingAdddress.State(childComplexity), true
-
-	case "BillingAdddress.zip":
-		if e.complexity.BillingAdddress.Zip == nil {
-			break
-		}
-
-		return e.complexity.BillingAdddress.Zip(childComplexity), true
+		return e.complexity.Mutation.CreateAuction(childComplexity, args["input"].(model.NewAuction)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -272,6 +211,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.NewUser)), true
 
+	case "Mutation.removeAuction":
+		if e.complexity.Mutation.RemoveAuction == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeAuction_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveAuction(childComplexity, args["auctionID"].(string)), true
+
 	case "Mutation.removeUser":
 		if e.complexity.Mutation.RemoveUser == nil {
 			break
@@ -284,40 +235,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RemoveUser(childComplexity, args["userid"].(string)), true
 
-	case "Payment.billingDetails":
-		if e.complexity.Payment.BillingDetails == nil {
+	case "Query.allAuctions":
+		if e.complexity.Query.AllAuctions == nil {
 			break
 		}
 
-		return e.complexity.Payment.BillingDetails(childComplexity), true
-
-	case "Payment.cryptoWallet":
-		if e.complexity.Payment.CryptoWallet == nil {
-			break
-		}
-
-		return e.complexity.Payment.CryptoWallet(childComplexity), true
-
-	case "Payment.digitalWallet":
-		if e.complexity.Payment.DigitalWallet == nil {
-			break
-		}
-
-		return e.complexity.Payment.DigitalWallet(childComplexity), true
-
-	case "Payment.paymentType":
-		if e.complexity.Payment.PaymentType == nil {
-			break
-		}
-
-		return e.complexity.Payment.PaymentType(childComplexity), true
-
-	case "Payment.paypal":
-		if e.complexity.Payment.Paypal == nil {
-			break
-		}
-
-		return e.complexity.Payment.Paypal(childComplexity), true
+		return e.complexity.Query.AllAuctions(childComplexity), true
 
 	case "Query.allUsers":
 		if e.complexity.Query.AllUsers == nil {
@@ -325,6 +248,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.AllUsers(childComplexity), true
+
+	case "Query.AuctionByID":
+		if e.complexity.Query.AuctionByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_AuctionByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.AuctionByID(childComplexity, args["auctionID"].(string)), true
 
 	case "Query.userByID":
 		if e.complexity.Query.UserByID == nil {
@@ -358,13 +293,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Name(childComplexity), true
-
-	case "User.paymentMethods":
-		if e.complexity.User.PaymentMethods == nil {
-			break
-		}
-
-		return e.complexity.User.PaymentMethods(childComplexity), true
 
 	case "User.phone":
 		if e.complexity.User.Phone == nil {
@@ -455,12 +383,6 @@ var sources = []*ast.Source{
 #
 # https://gqlgen.com/getting-started/
 
-enum payType{
-  DIGITALWALLET
-  CREDITCARD
-  CRYPTO
-}
-
 type User {
 	name: String!
 	userID: String!
@@ -468,7 +390,6 @@ type User {
   phone: String!
   priorityList: [Bidder]
   auctions: [Auction]
-  paymentMethods: [Payment]
 }
 
 input NewUser {
@@ -491,40 +412,33 @@ type Auction {
   freelancer: User
 }
 
-type Payment {
-  paymentType: payType
-  digitalWallet: String
-  paypal: String
-  cryptoWallet: String
-  billingDetails: BillDetails
-}
-
-type BillDetails {
-  email: String
-  fullName: String
-  phone: String
-  billAdd: BillingAdddress
-}
-
-type BillingAdddress {
-  city: String
-  countryCode: String
-  addressLine1: String
-  addressLine2: String
-  zip: String
-  state: String
+input NewAuction {
+  startDate: String
+  auctionLength: String
+  serviceDesc: String
+  freelancerID: String
 }
 
 type Query {
   # User
   allUsers: [User]
   userByID(userID: ID!): User!
+
+  # Auction
+  allAuctions: [Auction]
+  AuctionByID(auctionID: ID!): Auction!
 }
 
 type Mutation {
   # User mutations
   createUser(input: NewUser!): User!
   removeUser(userid: ID!): User!
+
+  # Auction
+  createAuction(input: NewAuction!): Auction!
+  removeAuction(auctionID: ID!): Auction!
+  bidOnAuction(userID: ID!, auctionID: ID!): Auction!
+
 }
 `, BuiltIn: false},
 }
@@ -533,6 +447,45 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_bidOnAuction_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["userID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userID"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["auctionID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auctionID"))
+		arg1, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["auctionID"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createAuction_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewAuction
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNNewAuction2githubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐNewAuction(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -549,6 +502,21 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_removeAuction_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["auctionID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auctionID"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["auctionID"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_removeUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -561,6 +529,21 @@ func (ec *executionContext) field_Mutation_removeUser_args(ctx context.Context, 
 		}
 	}
 	args["userid"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_AuctionByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["auctionID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auctionID"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["auctionID"] = arg0
 	return args, nil
 }
 
@@ -926,326 +909,6 @@ func (ec *executionContext) _Bidder_bidderID(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BillDetails_email(ctx context.Context, field graphql.CollectedField, obj *model.BillDetails) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillDetails",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Email, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillDetails_fullName(ctx context.Context, field graphql.CollectedField, obj *model.BillDetails) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillDetails",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.FullName, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillDetails_phone(ctx context.Context, field graphql.CollectedField, obj *model.BillDetails) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillDetails",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Phone, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillDetails_billAdd(ctx context.Context, field graphql.CollectedField, obj *model.BillDetails) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillDetails",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.BillAdd, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.BillingAdddress)
-	fc.Result = res
-	return ec.marshalOBillingAdddress2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillingAdddress(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillingAdddress_city(ctx context.Context, field graphql.CollectedField, obj *model.BillingAdddress) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillingAdddress",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.City, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillingAdddress_countryCode(ctx context.Context, field graphql.CollectedField, obj *model.BillingAdddress) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillingAdddress",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CountryCode, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillingAdddress_addressLine1(ctx context.Context, field graphql.CollectedField, obj *model.BillingAdddress) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillingAdddress",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AddressLine1, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillingAdddress_addressLine2(ctx context.Context, field graphql.CollectedField, obj *model.BillingAdddress) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillingAdddress",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AddressLine2, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillingAdddress_zip(ctx context.Context, field graphql.CollectedField, obj *model.BillingAdddress) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillingAdddress",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Zip, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BillingAdddress_state(ctx context.Context, field graphql.CollectedField, obj *model.BillingAdddress) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BillingAdddress",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.State, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1330,7 +993,7 @@ func (ec *executionContext) _Mutation_removeUser(ctx context.Context, field grap
 	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Payment_paymentType(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_createAuction(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1338,31 +1001,41 @@ func (ec *executionContext) _Payment_paymentType(ctx context.Context, field grap
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Payment",
+		Object:     "Mutation",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createAuction_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PaymentType, nil
+		return ec.resolvers.Mutation().CreateAuction(rctx, args["input"].(model.NewAuction))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.PayType)
+	res := resTmp.(*model.Auction)
 	fc.Result = res
-	return ec.marshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayType(ctx, field.Selections, res)
+	return ec.marshalNAuction2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Payment_digitalWallet(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_removeAuction(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1370,31 +1043,41 @@ func (ec *executionContext) _Payment_digitalWallet(ctx context.Context, field gr
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Payment",
+		Object:     "Mutation",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_removeAuction_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.DigitalWallet, nil
+		return ec.resolvers.Mutation().RemoveAuction(rctx, args["auctionID"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.Auction)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNAuction2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Payment_paypal(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_bidOnAuction(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1402,92 +1085,38 @@ func (ec *executionContext) _Payment_paypal(ctx context.Context, field graphql.C
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Payment",
+		Object:     "Mutation",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_bidOnAuction_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Paypal, nil
+		return ec.resolvers.Mutation().BidOnAuction(rctx, args["userID"].(string), args["auctionID"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Payment_cryptoWallet(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
 		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Payment",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CryptoWallet, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
 		return graphql.Null
 	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.Auction)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Payment_billingDetails(ctx context.Context, field graphql.CollectedField, obj *model.Payment) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Payment",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.BillingDetails, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.BillDetails)
-	fc.Result = res
-	return ec.marshalOBillDetails2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillDetails(ctx, field.Selections, res)
+	return ec.marshalNAuction2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_allUsers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1562,6 +1191,80 @@ func (ec *executionContext) _Query_userByID(ctx context.Context, field graphql.C
 	res := resTmp.(*model.User)
 	fc.Result = res
 	return ec.marshalNUser2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_allAuctions(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().AllAuctions(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Auction)
+	fc.Result = res
+	return ec.marshalOAuction2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_AuctionByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_AuctionByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().AuctionByID(rctx, args["auctionID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Auction)
+	fc.Result = res
+	return ec.marshalNAuction2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1837,38 +1540,6 @@ func (ec *executionContext) _User_auctions(ctx context.Context, field graphql.Co
 	res := resTmp.([]*model.Auction)
 	fc.Result = res
 	return ec.marshalOAuction2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _User_paymentMethods(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "User",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PaymentMethods, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.Payment)
-	fc.Result = res
-	return ec.marshalOPayment2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -2993,6 +2664,53 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputNewAuction(ctx context.Context, obj interface{}) (model.NewAuction, error) {
+	var it model.NewAuction
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "startDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("startDate"))
+			it.StartDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "auctionLength":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auctionLength"))
+			it.AuctionLength, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "serviceDesc":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("serviceDesc"))
+			it.ServiceDesc, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "freelancerID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("freelancerID"))
+			it.FreelancerID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj interface{}) (model.NewUser, error) {
 	var it model.NewUser
 	asMap := map[string]interface{}{}
@@ -3143,118 +2861,6 @@ func (ec *executionContext) _Bidder(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
-var billDetailsImplementors = []string{"BillDetails"}
-
-func (ec *executionContext) _BillDetails(ctx context.Context, sel ast.SelectionSet, obj *model.BillDetails) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, billDetailsImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("BillDetails")
-		case "email":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillDetails_email(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "fullName":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillDetails_fullName(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "phone":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillDetails_phone(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "billAdd":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillDetails_billAdd(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var billingAdddressImplementors = []string{"BillingAdddress"}
-
-func (ec *executionContext) _BillingAdddress(ctx context.Context, sel ast.SelectionSet, obj *model.BillingAdddress) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, billingAdddressImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("BillingAdddress")
-		case "city":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAdddress_city(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "countryCode":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAdddress_countryCode(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "addressLine1":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAdddress_addressLine1(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "addressLine2":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAdddress_addressLine2(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "zip":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAdddress_zip(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "state":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._BillingAdddress_state(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3294,62 +2900,36 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var paymentImplementors = []string{"Payment"}
-
-func (ec *executionContext) _Payment(ctx context.Context, sel ast.SelectionSet, obj *model.Payment) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, paymentImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Payment")
-		case "paymentType":
+		case "createAuction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Payment_paymentType(ctx, field, obj)
+				return ec._Mutation_createAuction(ctx, field)
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "digitalWallet":
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "removeAuction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Payment_digitalWallet(ctx, field, obj)
+				return ec._Mutation_removeAuction(ctx, field)
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "paypal":
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "bidOnAuction":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Payment_paypal(ctx, field, obj)
+				return ec._Mutation_bidOnAuction(ctx, field)
 			}
 
-			out.Values[i] = innerFunc(ctx)
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
 
-		case "cryptoWallet":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Payment_cryptoWallet(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "billingDetails":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Payment_billingDetails(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3410,6 +2990,49 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_userByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "allAuctions":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_allAuctions(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "AuctionByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_AuctionByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -3508,13 +3131,6 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		case "auctions":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._User_auctions(ctx, field, obj)
-			}
-
-			out.Values[i] = innerFunc(ctx)
-
-		case "paymentMethods":
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._User_paymentMethods(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -3939,6 +3555,20 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNAuction2githubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx context.Context, sel ast.SelectionSet, v model.Auction) graphql.Marshaler {
+	return ec._Auction(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAuction2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐAuction(ctx context.Context, sel ast.SelectionSet, v *model.Auction) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Auction(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3967,6 +3597,11 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNNewAuction2githubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐNewAuction(ctx context.Context, v interface{}) (model.NewAuction, error) {
+	res, err := ec.unmarshalInputNewAuction(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNNewUser2githubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
@@ -4352,20 +3987,6 @@ func (ec *executionContext) marshalOBidder2ᚖgithubᚗcomᚋPeyton232ᚋfreelan
 	return ec._Bidder(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOBillDetails2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillDetails(ctx context.Context, sel ast.SelectionSet, v *model.BillDetails) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._BillDetails(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOBillingAdddress2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐBillingAdddress(ctx context.Context, sel ast.SelectionSet, v *model.BillingAdddress) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._BillingAdddress(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4390,54 +4011,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOPayment2ᚕᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx context.Context, sel ast.SelectionSet, v []*model.Payment) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOPayment2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
-}
-
-func (ec *executionContext) marshalOPayment2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayment(ctx context.Context, sel ast.SelectionSet, v *model.Payment) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Payment(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
@@ -4746,22 +4319,6 @@ func (ec *executionContext) marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgen�
 		return graphql.Null
 	}
 	return ec.___Type(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayType(ctx context.Context, v interface{}) (*model.PayType, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(model.PayType)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOpayType2ᚖgithubᚗcomᚋPeyton232ᚋfreelanceᚑauctionᚋgraphᚋmodelᚐPayType(ctx context.Context, sel ast.SelectionSet, v *model.PayType) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
 }
 
 // endregion ***************************** type.gotpl *****************************

@@ -16,6 +16,18 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 }
 
 func (r *mutationResolver) RemoveUser(ctx context.Context, userid string) (*model.User, error) {
+	return db.RemoveUser(userid), nil
+}
+
+func (r *mutationResolver) CreateAuction(ctx context.Context, input model.NewAuction) (*model.Auction, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) RemoveAuction(ctx context.Context, auctionID string) (*model.Auction, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) BidOnAuction(ctx context.Context, userID string, auctionID string) (*model.Auction, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -25,6 +37,14 @@ func (r *queryResolver) AllUsers(ctx context.Context) ([]*model.User, error) {
 
 func (r *queryResolver) UserByID(ctx context.Context, userID string) (*model.User, error) {
 	return db.FindUserByID(userID), nil
+}
+
+func (r *queryResolver) AllAuctions(ctx context.Context) ([]*model.Auction, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) AuctionByID(ctx context.Context, auctionID string) (*model.Auction, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -2,12 +2,6 @@
 #
 # https://gqlgen.com/getting-started/
 
-enum payType{
-  DIGITALWALLET
-  CREDITCARD
-  CRYPTO
-}
-
 type User {
 	name: String!
 	userID: String!
@@ -15,7 +9,6 @@ type User {
   phone: String!
   priorityList: [Bidder]
   auctions: [Auction]
-  paymentMethods: [Payment]
 }
 
 input NewUser {
@@ -38,38 +31,31 @@ type Auction {
   freelancer: User
 }
 
-type Payment {
-  paymentType: payType
-  digitalWallet: String
-  paypal: String
-  cryptoWallet: String
-  billingDetails: BillDetails
-}
-
-type BillDetails {
-  email: String
-  fullName: String
-  phone: String
-  billAdd: BillingAdddress
-}
-
-type BillingAdddress {
-  city: String
-  countryCode: String
-  addressLine1: String
-  addressLine2: String
-  zip: String
-  state: String
+input NewAuction {
+  startDate: String
+  auctionLength: String
+  serviceDesc: String
+  freelancerID: String
 }
 
 type Query {
   # User
   allUsers: [User]
   userByID(userID: ID!): User!
+
+  # Auction
+  allAuctions: [Auction]
+  AuctionByID(auctionID: ID!): Auction!
 }
 
 type Mutation {
   # User mutations
   createUser(input: NewUser!): User!
   removeUser(userid: ID!): User!
+
+  # Auction
+  createAuction(input: NewAuction!): Auction!
+  removeAuction(auctionID: ID!): Auction!
+  bidOnAuction(userID: ID!, auctionID: ID!): Auction!
+
 }
